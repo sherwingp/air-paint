@@ -48,10 +48,13 @@ def get_mode(image, results):
 
     # Write the mode   
     fs = fingers_statuses
-    mode = None
+    mode = 'None'
     if (fs['RIGHT_INDEX'] == True or fs['LEFT_INDEX'] == True) and count['RIGHT'] + count['LEFT'] == 1:
         mode = 'Paint'
+    elif (fs['RIGHT_INDEX'] == True or fs['LEFT_INDEX'] == True) and (fs['RIGHT_MIDDLE'] == True or fs['LEFT_MIDDLE'] == True) and count['RIGHT'] + count['LEFT'] == 2:
+        mode = 'Select'
     cv2.putText(output_image, f"Mode: {mode}", (10, 25),cv2.FONT_HERSHEY_COMPLEX, 1, (20,255,155), 2)
+
 
     # Return the output image, the status of each finger and the count of the fingers up of both hands.
     return output_image
