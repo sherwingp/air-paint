@@ -30,7 +30,10 @@ def get_mode(image, results):
         
         # Retrieve the landmarks of the found hand.
         hand_landmarks =  results.multi_hand_landmarks[hand_index]
-        
+
+        # Track paint cursor position
+        cursor_pos = [hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP].x * width, hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP].y * height]
+
         # Iterate over the indexes of the tips landmarks of each finger of the hand.
         for tip_index in fingers_tips_ids:
             
@@ -55,6 +58,5 @@ def get_mode(image, results):
         mode = 'Select'
     cv2.putText(output_image, f"Mode: {mode}", (10, 25),cv2.FONT_HERSHEY_COMPLEX, 1, (20,255,155), 2)
 
-
-    # Return the output image, the status of each finger and the count of the fingers up of both hands.
-    return output_image
+    # Return the output image and the index finger position
+    return output_image, cursor_pos, mode
