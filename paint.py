@@ -13,6 +13,7 @@ class PaintApp:
         self.mode = None
 
         self.canvas = Canvas(self.window, width=self.vid.width, height = self.vid.height)
+        self.image = self.canvas.create_image(0, 0, anchor="nw")
         self.canvas.pack()
         self.canvas.bind('<Motion>', self.motion)
         # self.canvas.bind("<Select>", self.motion)
@@ -39,7 +40,7 @@ class PaintApp:
 
         if ret:
             self.photo = ImageTk.PhotoImage(image = Image.fromarray(frame))
-            self.canvas.create_image(0, 0, image = self.photo, anchor = NW)
+            self.canvas.itemconfig(self.image, image=self.photo)
 
         self.window.after(self.delay, self.update)
 
