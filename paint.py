@@ -50,6 +50,10 @@ class PaintApp:
             self.canvas.itemconfig(self.image, image=self.photo)
 
         self.window.after(self.delay, self.update)
+        if self.mode != "Paint":
+            self.old_x_pos = None
+            self.old_y_pos = None
+
         self.paint()
 
     def draw(image, x_pos, y_pos, mode):
