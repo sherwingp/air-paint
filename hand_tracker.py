@@ -37,7 +37,10 @@ class MyVideoCapture:
         results = hands.process(image)
         image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
         annotated_image = image.copy()
+        
+        # Check if hand landmarks are detected
         if results.multi_hand_landmarks:
+          # Draw each hand landmark
           for hand_landmarks in results.multi_hand_landmarks:
             mp_drawing.draw_landmarks(
                 annotated_image,
