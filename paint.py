@@ -15,18 +15,16 @@ class PaintApp:
         self.canvas = Canvas(self.window, width=self.vid.width, height = self.vid.height)
         self.image = self.canvas.create_image(0, 0, anchor="nw")
         self.canvas.pack()
-        self.canvas.bind('<Motion>', self.motion)
-        # self.canvas.bind("<Select>", self.motion)
-        # self.canvas.bind("<Erase>", self.motion)
 
         self.delay = 15
         self.update()
+        
         self.window.mainloop()
 
-    def motion(self, event=None):
+    def paint(self):
         if self.mode == "Paint":
             if self.x_pos is not None and self.y_pos is not None:
-                event.widget.create_line(self.x_pos, self.y_pos, self.x_pos, self.y_pos, width=5,fill='red',capstyle=ROUND,smooth=True)
+                self.canvas.create_line(self.x_pos, self.y_pos, self.x_pos, self.y_pos, width=5,fill='red',capstyle=ROUND,smooth=True)
 
     def update(self):
         # Get a frame from the video source
@@ -43,10 +41,10 @@ class PaintApp:
             self.canvas.itemconfig(self.image, image=self.photo)
 
         self.window.after(self.delay, self.update)
+        self.paint()
 
     def draw(image, x_pos, y_pos, mode):
         drawing_tool = "draw"
 
 root = Tk()
 paint_app = PaintApp(root, "Air Paint")
-root.mainloop()
