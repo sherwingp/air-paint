@@ -22,6 +22,10 @@ class PaintApp:
         # Get a frame from the video source
         ret, frame = self.vid.get_frame()
 
+        # Add hand tracking
+        frame = self.vid.track_hands(cv2.flip(frame, 1))
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        
         if ret:
             self.photo = ImageTk.PhotoImage(image = Image.fromarray(frame))
             self.canvas.create_image(0, 0, image = self.photo, anchor = NW)
