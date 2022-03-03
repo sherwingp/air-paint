@@ -24,6 +24,8 @@ class MyVideoCapture:
     mp_drawing = mp.solutions.drawing_utils
     mp_drawing_styles = mp.solutions.drawing_styles
     mp_hands = mp.solutions.hands
+    cursor_pos = None
+    mode = None
 
     with mp_hands.Hands(
         model_complexity=0,
@@ -46,7 +48,7 @@ class MyVideoCapture:
 
           annotated_image, cursor_pos, mode = fc.get_mode(annotated_image, results)
       
-    return annotated_image
+    return annotated_image, cursor_pos, mode
 
   def __del__(self):
     if self.cap.isOpened():
