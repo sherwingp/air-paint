@@ -10,6 +10,8 @@ class PaintApp:
         self.vid = MyVideoCapture()
         self.x_pos = None
         self.y_pos = None
+        self.old_x_pos = None
+        self.old_y_pos = None
         self.mode = None
 
         self.canvas = Canvas(self.window, width=self.vid.width, height = self.vid.height)
@@ -24,7 +26,14 @@ class PaintApp:
     def paint(self):
         if self.mode == "Paint":
             if self.x_pos is not None and self.y_pos is not None:
-                self.canvas.create_line(self.x_pos, self.y_pos, self.x_pos, self.y_pos, width=5,fill='red',capstyle=ROUND,smooth=True)
+                if self.old_x_pos is None and self.old_y_pos is None:
+                    self.canvas.create_line(self.x_pos, self.y_pos, self.x_pos, self.y_pos, width=5,fill='red',capstyle=ROUND,smooth=True)
+                    self.old_x_pos = self.x_pos
+                    self.old_y_pos = self.y_pos
+                else:
+                    self.canvas.create_line(self.old_x_pos, self.old_y_pos, self.x_pos, self.y_pos, width=5,fill='red',capstyle=ROUND,smooth=True)
+                    self.old_x_pos = self.x_pos
+                    self.old_y_pos = self.y_pos
 
     def update(self):
         # Get a frame from the video source
