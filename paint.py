@@ -1,5 +1,5 @@
 from tkinter import *
-from PIL import Image, ImageTk
+from PIL import Image, ImageTk, ImageGrab
 from hand_tracker import MyVideoCapture
 import cv2
 import numpy as np
@@ -41,19 +41,28 @@ class PaintApp:
                     self.old_x_pos = self.x_pos
                     self.old_y_pos = self.y_pos
 
+    def get_pixel_colour(self):
+        x = root.winfo_rootx() + self.canvas.winfo_x()
+        y = root.winfo_rooty() + self.canvas.winfo_y()
+        xx = x + self.canvas.winfo_width()
+        yy = y + self.canvas.winfo_height()
+        image = ImageGrab.grab(bbox=(x, y, xx, yy))
+        return image.getpixel((self.x_pos, 450))
+
     def select_colour(self, frame):
         img = cv2.imread("colours.jpg")
         img_height, img_width, _ = img.shape
         img2gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         ret, mask = cv2.threshold(img2gray, 1, 255, cv2.THRESH_BINARY)
         
-        # Region of Interest (ROI), where we want
-        # to insert logo
+        # Colour Selector Region of Interest (ROI)
         roi = frame[-img_height-10:-10, -img_width-10:-10]
-        
         # Set an index of where the mask is
         roi[np.where(mask)] = 0
         roi += img
+        self.canvas.create_line(255, 450, 100, 100, width=5,fill='red',capstyle=ROUND,smooth=True)
+        print(self.get_pixel_colour())
+
 
     def update(self):
         # Get a frame from the video source
@@ -61,6 +70,8 @@ class PaintApp:
 
         # Add hand tracking
         frame, cursor_pos, self.mode = self.vid.track_hands(cv2.flip(frame, 1))
+
+        # Get index finger position
         if cursor_pos:
             self.x_pos, self.y_pos = cursor_pos[0], cursor_pos[1]
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
