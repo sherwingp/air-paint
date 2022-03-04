@@ -14,6 +14,7 @@ class PaintApp:
         self.old_x_pos = None
         self.old_y_pos = None
         self.mode = None
+        self.fill = (0, 255, 0)
 
         # Create canvas
         self.canvas = Canvas(self.window, width=self.vid.width, height = self.vid.height)
@@ -25,6 +26,9 @@ class PaintApp:
         
         self.window.mainloop()
 
+    def rgb_hack(self, rgb):
+        return "#%02x%02x%02x" % rgb 
+
     def paint(self):
         if self.mode == "Paint":
             # Check if co-ordinates are valid
@@ -32,21 +36,25 @@ class PaintApp:
                 # Check if line is continuing
                 if self.old_x_pos is None and self.old_y_pos is None:
                     # Start new line
-                    self.canvas.create_line(self.x_pos, self.y_pos, self.x_pos, self.y_pos, width=5,fill='red',capstyle=ROUND,smooth=True)
+                    self.canvas.create_line(self.x_pos, self.y_pos, self.x_pos, self.y_pos, width=5,fill=self.rgb_hack(self.fill),capstyle=ROUND,smooth=True)
                     self.old_x_pos = self.x_pos
                     self.old_y_pos = self.y_pos
                 else:
                     # Continue old line
-                    self.canvas.create_line(self.old_x_pos, self.old_y_pos, self.x_pos, self.y_pos, width=5,fill='red',capstyle=ROUND,smooth=True)
+                    self.canvas.create_line(self.old_x_pos, self.old_y_pos, self.x_pos, self.y_pos, width=5,fill=self.rgb_hack(self.fill),capstyle=ROUND,smooth=True)
                     self.old_x_pos = self.x_pos
                     self.old_y_pos = self.y_pos
 
+    # Gets colour from gradient at Y relative to finger X position
     def get_pixel_colour(self):
+        # Takes snapshot of canvas
         x = root.winfo_rootx() + self.canvas.winfo_x()
         y = root.winfo_rooty() + self.canvas.winfo_y()
         xx = x + self.canvas.winfo_width()
         yy = y + self.canvas.winfo_height()
         image = ImageGrab.grab(bbox=(x, y, xx, yy))
+
+        # Returns colour of pixel at canvas
         return image.getpixel((self.x_pos, 450))
 
     def select_colour(self, frame):
@@ -60,8 +68,9 @@ class PaintApp:
         # Set an index of where the mask is
         roi[np.where(mask)] = 0
         roi += img
-        self.canvas.create_line(255, 450, 100, 100, width=5,fill='red',capstyle=ROUND,smooth=True)
-        print(self.get_pixel_colour())
+
+        # Set line colour to selected colour
+        self.fill = self.get_pixel_colour()
 
 
     def update(self):
