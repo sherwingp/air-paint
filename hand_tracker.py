@@ -20,7 +20,7 @@ class MyVideoCapture:
     else:
         return (ret, None)
 
-  def track_hands(self, image):
+  def track_hands(self, image, colour):
     mp_drawing = mp.solutions.drawing_utils
     mp_drawing_styles = mp.solutions.drawing_styles
     mp_hands = mp.solutions.hands
@@ -46,7 +46,7 @@ class MyVideoCapture:
                 annotated_image,
                 hand_landmarks,
                 mp_hands.HAND_CONNECTIONS,
-                mp_drawing_styles.get_default_hand_landmarks_style(),
+                mp_drawing.DrawingSpec(color=colour, thickness=2, circle_radius=4),
                 mp_drawing_styles.get_default_hand_connections_style())
 
           annotated_image, cursor_pos, mode = fc.get_mode(annotated_image, results)

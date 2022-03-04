@@ -78,15 +78,15 @@ class PaintApp:
         ret, frame = self.vid.get_frame()
 
         # Add hand tracking
-        frame, cursor_pos, self.mode = self.vid.track_hands(cv2.flip(frame, 1))
+        frame, cursor_pos, self.mode = self.vid.track_hands(cv2.flip(frame, 1), self.fill)
+
+        if self.mode == "Select":
+            self.select_colour(frame)
 
         # Get index finger position
         if cursor_pos:
             self.x_pos, self.y_pos = cursor_pos[0], cursor_pos[1]
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-
-        if self.mode == "Select":
-            self.select_colour(frame)
         
         # Update canvas with opencv video frame
         if ret:
