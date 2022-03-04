@@ -2,6 +2,7 @@ from tkinter import *
 from PIL import Image, ImageTk
 from hand_tracker import MyVideoCapture
 import cv2
+import numpy as np
 
 class PaintApp:
     def __init__(self, window, window_title):
@@ -40,6 +41,20 @@ class PaintApp:
                     self.old_x_pos = self.x_pos
                     self.old_y_pos = self.y_pos
 
+    def select_colour(self, frame):
+        img = cv2.imread("colours.jpg")
+        img_height, img_width, _ = img.shape
+        img2gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        ret, mask = cv2.threshold(img2gray, 1, 255, cv2.THRESH_BINARY)
+        
+        # Region of Interest (ROI), where we want
+        # to insert logo
+        roi = frame[-img_height-10:-10, -img_width-10:-10]
+        
+        # Set an index of where the mask is
+        roi[np.where(mask)] = 0
+        roi += img
+
     def update(self):
         # Get a frame from the video source
         ret, frame = self.vid.get_frame()
@@ -49,6 +64,9 @@ class PaintApp:
         if cursor_pos:
             self.x_pos, self.y_pos = cursor_pos[0], cursor_pos[1]
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
+        if self.mode == "Select":
+            self.select_colour(frame)
         
         # Update canvas with opencv video frame
         if ret:
