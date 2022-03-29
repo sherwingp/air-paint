@@ -23,6 +23,13 @@ class PaintApp:
         self.image = self.canvas.create_image(0, 0, anchor="nw")
         self.canvas.pack()
 
+        # Create delete button
+        def delete_line():
+            self.canvas.delete(self.history.pop())
+
+        Button(root, text="Delete Shape", command=delete_line).pack()
+
+
         self.delay = 15
         self.update()
         
@@ -45,7 +52,8 @@ class PaintApp:
                     self.old_y_pos = self.y_pos
                 else:
                     # Continue old line
-                    self.canvas.create_line(self.old_x_pos, self.old_y_pos, self.x_pos, self.y_pos, width=5,fill=self.rgb_hack(self.fill),capstyle=ROUND,smooth=True)
+                    line = self.canvas.create_line(self.old_x_pos, self.old_y_pos, self.x_pos, self.y_pos, width=5,fill=self.rgb_hack(self.fill),capstyle=ROUND,smooth=True)
+                    self.history.append(line)
                     self.old_x_pos = self.x_pos
                     self.old_y_pos = self.y_pos
 
