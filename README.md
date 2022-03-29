@@ -8,9 +8,12 @@ A Python program that lets you draw on your webcam feed in different colours wit
 - Painting on webcam feed with fingers
 - Change between paint, select and no mode by lifting the index, index and middle fingers, or no fingers 
 - Select different colours by hovering over colour palette
+- Undo button
 
 ## Todo:
 - Add eraser
+- ~~Add undo button~~
+- Add redo button
 
 ## Technologies used:
 Python, Mediapipe, OpenCV, Tkinter
