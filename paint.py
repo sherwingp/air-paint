@@ -14,6 +14,8 @@ class PaintApp:
         self.old_x_pos = None
         self.old_y_pos = None
         self.mode = None
+        self.prev_mode = None
+        self.history = []
         self.fill = (0, 255, 0)
 
         # Create canvas
@@ -36,7 +38,9 @@ class PaintApp:
                 # Check if line is continuing
                 if self.old_x_pos is None and self.old_y_pos is None:
                     # Start new line
-                    self.canvas.create_line(self.x_pos, self.y_pos, self.x_pos, self.y_pos, width=5,fill=self.rgb_hack(self.fill),capstyle=ROUND,smooth=True)
+                    line = self.canvas.create_line(self.x_pos, self.y_pos, self.x_pos, self.y_pos, width=5,fill=self.rgb_hack(self.fill),capstyle=ROUND,smooth=True)
+                    # Record drawings to history stack
+                    self.history.append(line)
                     self.old_x_pos = self.x_pos
                     self.old_y_pos = self.y_pos
                 else:
@@ -101,6 +105,9 @@ class PaintApp:
             self.old_y_pos = None
 
         self.paint()
+
+        # Record previous mode for undo function
+        prev_mode = self.mode
 
 root = Tk()
 paint_app = PaintApp(root, "Air Paint")
